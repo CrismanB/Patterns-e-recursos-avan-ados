@@ -1,21 +1,9 @@
 const User = require("./../models/User");
 const jwt = require("jsonwebtoken");
-let Yup = require("yup");
 const auth = require("./../../config/auth");
 const File = require("./../models/File");
 class SessionController {
     async store(req, res) {
-        const schema = Yup.object().shape({
-            email: Yup.string()
-                .email()
-                .required(),
-            password: Yup.string().required()
-        });
-
-        if (!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: "validations fails" });
-        }
-
         const { email, password } = req.body;
 
         const user = await User.findOne({

@@ -11,21 +11,30 @@ const ScheduleController = require("./App/controllers/ScheduleController");
 const NotificationsController = require("./App/controllers/NotificationsController");
 const AvailableController = require("./App/controllers/AvailableController");
 
+const validateUserStore = require("./App/validators/UserStore");
+const validateUserUpdate = require("./App/validators/UserUpdate");
+const validateSessionStore = require("./App/validators/SessionStore");
+const validateAppointmentStore = require("./App/validators/AppointmentStore");
+
 const routes = new Router();
 const upload = multer(multerConfig);
 const authMiddleware = require("./App/middlewares/auth");
 
-routes.post("/users", UserController.store);
-routes.post("/session", SessionController.store);
+routes.post("/users", validateUserStore, UserController.store);
+routes.post("/session", validateSessionStore, SessionController.store);
 
 routes.use(authMiddleware);
 
-routes.put("/users", UserController.update);
+routes.put("/users", validateUserUpdate, UserController.update);
 
 routes.get("/providers", ProviderController.index);
 routes.get("/providers/:providerId/available", AvailableController.index);
 
-routes.post("/appointment", AppointmentController.store);
+routes.post(
+    "/appointment",
+    validateAppointmentStore,
+    AppointmentController.store
+);
 routes.get("/appointment", AppointmentController.index);
 routes.delete("/appointment/:id", AppointmentController.destroy);
 
